@@ -50,7 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
             }
         });
     }
@@ -59,29 +59,29 @@ public class RegisterActivity extends AppCompatActivity {
         final String email = editTextEmail.getText().toString();
         final String password = editTextPassword.getText().toString();
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-            Toast.makeText(MainActivity.this, "There are one or more empty fields.",
+            Toast.makeText(RegisterActivity.this, "There are one or more empty fields.",
                     Toast.LENGTH_SHORT).show();
         }
         else {
             progressDialog.setMessage("Registering User...");
             progressDialog.show();
             firebaseAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                    .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                                 String userId = firebaseUser.getUid();
-                                User user = new User(email, password);
+                                User user = new User(email);
                                 databaseReference.child("users").child(userId).setValue(user);
                                 progressDialog.dismiss();
-                                Toast.makeText(MainActivity.this, "Registered Successfully",
+                                Toast.makeText(RegisterActivity.this, "Registered Successfully",
                                         Toast.LENGTH_SHORT).show();
                                 finish();
-                                startActivity(new Intent(MainActivity.this, UserAreaActivity.class));
+                                startActivity(new Intent(RegisterActivity.this, DashboardActivity.class));
                             } else {
                                 progressDialog.dismiss();
-                                Toast.makeText(MainActivity.this, "Failed to Register",
+                                Toast.makeText(RegisterActivity.this, "Failed to Register",
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
